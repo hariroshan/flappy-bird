@@ -11,14 +11,17 @@
     "build:webpack": "webpack --mode development"
   },
   "dependencies": {
+    "@nativescript/canvas": "^1.1.0",
+    "@nativescript/canvas-phaser": "^1.1.0",
     "@nativescript/core": "~8.4.0",
     "@nativescript/theme": "~3.0.2",
     "elm": "^0.19.1-5",
-    "elm-native-js": "^1.1.0"
+    "elm-native-js": "^1.1.0",
+    "phaser": "^3.60.0"
   },
   "devDependencies": {
-    "@nativescript/ios": "8.4.1",
     "@nativescript/android": "8.4.0",
+    "@nativescript/ios": "8.4.1",
     "@nativescript/types": "~8.4.0",
     "@nativescript/webpack": "~5.0.12",
     "elm-webpack-loader": "^8.0.0",
