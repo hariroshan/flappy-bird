@@ -7,25 +7,17 @@ purpose of the file is to pass control to the app’s first module.
 import Elm from "./src/Main.elm";
 import { start } from "elm-native-js"
 import { Canvas } from '@nativescript/canvas'
-import * as TNSPhaser from "@nativescript/canvas-phaser";
 import * as TaskPort from 'elm-taskport';
 import { kebabCased, view } from "elm-native-js/src/Native/Constants.bs"
 import { buildHandler, addViewRender } from "elm-native-js/src/Native/Elements.bs"
 import { Screen } from '@nativescript/core/platform'
 
-//@ts-ignore
-TaskPort.install({ logCallErrors: true, logInteropErrors: true });
 
 let game: any;
 TaskPort.register("initialize", (args: any) => {
-    const nsCanvas = document.getElementsByTagName('ns-canvas')[0]
-    if (nsCanvas == null) throw "Canvas not found"
+  const nsCanvas = document.getElementsByTagName('ns-canvas')[0]
+  if (nsCanvas == null) throw "Canvas not found"
 
-    //@ts-ignore
-    const nativeCanvasObject = nsCanvas.data
-    const context = nativeCanvasObject.getContext('2d');
-
-    game = TNSPhaser.Game({...args, canvas: nativeCanvasObject})
 })
 
 const canvasAttributes = [].map(kebabCased)

@@ -13,7 +13,6 @@
   "dependencies": {
     "@nativescript/canvas": "^1.1.0",
     "@nativescript/canvas-media": "^1.1.0",
-    "@nativescript/canvas-phaser": "^1.1.0",
     "@nativescript/core": "~8.4.0",
     "@nativescript/theme": "~3.0.2",
     "elm": "^0.19.1-5",

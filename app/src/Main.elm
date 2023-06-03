@@ -3,8 +3,10 @@ module Main exposing (main)
 import Browser
 import Html exposing (node)
 import Html.Lazy exposing (lazy3)
+import Json.Decode as D
 import Native exposing (Native)
 import Native.Attributes as NA
+import Native.Event as Ev
 import Native.Frame as Frame
 import Native.Layout as Layout
 import Native.Page as Page
@@ -52,15 +54,13 @@ init flags =
     ( { rootFrame = Frame.init HomePage
       , screenDimension = flags
       }
-    , flags
-        |> buildPhaserConfig
-        |> PhaserTask.initialize
-        |> Task.attempt InitializedPhaser
+    , Cmd.none
     )
 
 
 type Msg
     = SyncFrame Bool
+    | Ready
     | InitializedPhaser (TaskPort.Result ())
 
 
@@ -69,6 +69,14 @@ update msg model =
     case msg of
         SyncFrame bool ->
             ( { model | rootFrame = Frame.handleBack bool model.rootFrame }, Cmd.none )
+
+        Ready ->
+            ( model
+            , model.screenDimension
+                |> buildPhaserConfig
+                |> PhaserTask.initialize
+                |> Task.attempt InitializedPhaser
+            )
 
         InitializedPhaser result ->
             let
@@ -90,6 +98,7 @@ homePage model =
                 , model.screenDimension.width |> String.fromInt |> NA.width
                 , NA.borderColor "red"
                 , NA.borderWidth "1"
+                , Ev.on "ready" (D.succeed Ready)
                 ]
                 []
             ]
