@@ -11,10 +11,21 @@ import * as TNSPhaser from "@nativescript/canvas-phaser";
 import * as TaskPort from 'elm-taskport';
 import { kebabCased, view } from "elm-native-js/src/Native/Constants.bs"
 import { buildHandler, addViewRender } from "elm-native-js/src/Native/Elements.bs"
+import { Screen } from '@nativescript/core/platform'
+
+//@ts-ignore
+TaskPort.install({ logCallErrors: true, logInteropErrors: true });
 
 let game: any;
 TaskPort.register("initialize", (args: any) => {
-  game = TNSPhaser.Game(args)
+    const nsCanvas = document.getElementsByTagName('ns-canvas')[0]
+    if (nsCanvas == null) throw "Canvas not found"
+
+    //@ts-ignore
+    const nativeCanvasObject = nsCanvas.data
+    const context = nativeCanvasObject.getContext('2d');
+
+    game = TNSPhaser.Game({...args, canvas: nativeCanvasObject})
 })
 
 const canvasAttributes = [].map(kebabCased)
@@ -22,6 +33,7 @@ const canvasAttributes = [].map(kebabCased)
 const config = {
   elmModule: Elm,
   elmModuleName: "Main",
+  flags: {width: Screen.mainScreen.widthPixels | 0, height: Screen.mainScreen.heightPixels | 0},
   customElements: [
     { tagName: 'ns-canvas'
     , handler: buildHandler(

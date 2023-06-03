@@ -4,6 +4,7 @@ declare module "*.elm" {
 
 declare module "elm-taskport" {
   export function register(functionName: string, fn: any) : void;
+  export function install() : void;
 }
 
 declare module "elm-native-js/src/Native/Elements.bs" {

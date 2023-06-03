@@ -1,11 +1,40 @@
 module Main exposing (main)
 
 import Browser
+import Html exposing (node)
+import Html.Lazy exposing (lazy3)
 import Native exposing (Native)
 import Native.Attributes as NA
 import Native.Frame as Frame
 import Native.Layout as Layout
 import Native.Page as Page
+import PhaserTask
+import Task
+import TaskPort
+import Types exposing (..)
+
+
+buildPhaserConfig : Flags -> PhaserConfig
+buildPhaserConfig flags =
+    { width = flags.width
+    , height = flags.height
+    , preventLoop = True
+    , physics =
+        { default = "arcade"
+        , arcade =
+            { gravity =
+                { y = 300
+                }
+            , debug = False
+            }
+        }
+    }
+
+
+type alias Flags =
+    { width : Int
+    , height : Int
+    }
 
 
 type NavPage
@@ -14,18 +43,25 @@ type NavPage
 
 type alias Model =
     { rootFrame : Frame.Model NavPage
+    , screenDimension : Flags
     }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { rootFrame = Frame.init HomePage }
-    , Cmd.none
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { rootFrame = Frame.init HomePage
+      , screenDimension = flags
+      }
+    , flags
+        |> buildPhaserConfig
+        |> PhaserTask.initialize
+        |> Task.attempt InitializedPhaser
     )
 
 
 type Msg
     = SyncFrame Bool
+    | InitializedPhaser (TaskPort.Result ())
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -34,18 +70,28 @@ update msg model =
         SyncFrame bool ->
             ( { model | rootFrame = Frame.handleBack bool model.rootFrame }, Cmd.none )
 
+        InitializedPhaser result ->
+            let
+                _ =
+                    result |> Debug.log "RESL"
+            in
+            ( model, Cmd.none )
+
 
 homePage : Model -> Native Msg
-homePage _ =
-    Page.pageWithActionBar SyncFrame
+homePage model =
+    Page.page
+        SyncFrame
         []
-        (Native.actionBar [ NA.title "Elm Native Blank" ] [])
-        (Layout.flexboxLayout
-            [ NA.alignItems "center"
-            , NA.justifyContent "center"
-            , NA.height "100%"
-            ]
-            [ Native.label [ NA.class "main", NA.text "Hello From Elm" ] []
+        (Layout.stackLayout []
+            [ lazy3 node
+                "ns-canvas"
+                [ model.screenDimension.height |> String.fromInt |> NA.height
+                , model.screenDimension.width |> String.fromInt |> NA.width
+                , NA.borderColor "red"
+                , NA.borderWidth "1"
+                ]
+                []
             ]
         )
 
@@ -68,10 +114,10 @@ subscriptions _ =
     Sub.none
 
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     Browser.element
-        { init = always init
+        { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
