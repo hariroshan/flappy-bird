@@ -1,4 +1,6 @@
 const webpack = require("@nativescript/webpack");
+const { ProvidePlugin } = require('webpack')
+
 const path = require('path');
 
 module.exports = (env) => {

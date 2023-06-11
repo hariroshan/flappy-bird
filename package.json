@@ -16,8 +16,8 @@
     "@nativescript/core": "~8.4.0",
     "@nativescript/theme": "~3.0.2",
     "elm": "^0.19.1-5",
-    "elm-native-js": "^1.1.0",
-    "phaser": "^3.60.0"
+    "elm-native-js": "./elm-native-js",
+    "pixi.js": "^7.2.4"
   },
   "devDependencies": {
     "@nativescript/android": "8.4.0",

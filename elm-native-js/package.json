@@ -1,0 +1,25 @@
+{
+  "name": "elm-native-js",
+  "version": "1.1.0",
+  "description": "Nativescript bindings for elm using custom HTML elements",
+  "keywords": ["elm", "elm-native", "nativescript", "elm mobile"],
+  "main": "index.js",
+  "author": "Hari Roshan",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "postinstall": "rescript"
+  },
+  "dependencies": {
+    "elm-taskport": "^2.0.1",
+    "happy-dom": "^6.0.4",
+    "rescript": "^10.0.1",
+    "vm-shim": "^0.0.6"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  },
+  "repository": {
+    "url": "https://github.com/hariroshan/elm-native-library"
+  },
+  "funding": "https://github.com/sponsors/hariroshan"
+}
